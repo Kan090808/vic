@@ -84,6 +84,16 @@
     var min = 10
     var timer = null
     var pplArr = null
+    class People {
+      constructor(id, good, age, work, food, strong){
+        this.id = id,
+        this.good = good,
+        this.age = age,
+        this.work = work,
+        this.food = food,
+        this.strong = strong
+      }
+    }
     var app = new Vue({
       el: '#app',
       data: {
@@ -98,7 +108,9 @@
         deadCount: 0,
         happy: 100,
         money: 100,
-        alertLevel: 0
+        alertLevel: 0,
+        cityCount: 3,
+        cityArr: null
       },
       computed: {
         timeLeft() {
@@ -114,19 +126,45 @@
         getPeopleArray() {
           if(this.pplArr == null){
             var arr = new Array()
-            for(var i=0; i<this.peopleCount; i++){
-              var ppl = {id:i, good:true}
-              arr.push(ppl)
-            }
+            var totalCount = this.myCopy(this.peopleCount)
+            var youngCount = Math.floor(totalCount/2)
+            totalCount -= youngCount
+            var oldCount = Math.floor(totalCount/3*2)
+            totalCount -= oldCount
+            var childCount = totalCount
+            this.insertPeople(arr, youngCount, 'young')
+            this.insertPeople(arr, oldCount, 'old')
+            this.insertPeople(arr, childCount, 'child')
             this.pplArr = arr
           }
           return this.pplArr
+        },
+        getCityArray(){
+          if(this.cityArr == null){
+            var nameArr = ["A", "B", "C"]
+            var arr = []
+            var totalCount = this.peopleCount.copy
+            for(var i=0; i<this.cityCount; i++){
+              var mother = Math.floor(Math.random() * (5 - 1) + 1)
+              var pplCount
+              if(i == this.cityCount-1){
+                pplCount = totalCount
+              }else{
+                pplCount = totalCount/mother
+                totalCount -= pplCount
+              }
+              var city = new City(nameArr[i],pplCount)
+              arr.push(city)
+            }
+            this.cityArr = arr
+          }
+          return this.cityArr
         }
       },
       methods: {
         startBtnClicked(){
           this.started = true
-          console.log(this.getPeopleArray[this.peopleCount-1])
+          console.log(this.getPeopleArray)
         },
         nextBtnClicked(){
           console.log(this.loading)
@@ -161,7 +199,54 @@
             this.endCount()
             this.timePassed = 0
           }
-        }
+        },
+        myCopy(obj){
+          return JSON.parse(JSON.stringify(obj));
+        },
+        insertPeople(arr, count, type){
+          var goodMax, goodMin
+          var ageMax, ageMin
+          var workMax, workMin
+          var foodMax, foodMin
+          if(type == 'young'){
+            goodMax = 99, goodMin = 60
+            ageMax = 60, ageMin = 20
+            workMax = 100, workMin = 90
+            foodMax = 100, foodMin = 40
+          }else if(type == 'old'){
+            goodMax = 80, goodMin = 30
+            ageMax = 100, ageMin = 61
+            workMax = 0, workMin = 0
+            foodMax = 100, foodMin = 40
+          }else if(type == 'child'){
+            goodMax = 99, goodMin = 60
+            ageMax = 0, ageMin = 19
+            workMax = 0, workMin = 0
+            foodMax = 100, foodMin = 40
+          }
+          for(var i=0; i<count; i++){
+              var good = Math.floor(Math.random() * (goodMax - goodMin) + goodMin)
+              var age = Math.floor(Math.random() * (ageMax - ageMin) + ageMin)
+              var workInt = Math.floor(Math.random() * (workMax - workMin) + workMin)
+              var work
+              if(workInt>60){
+                work = true
+              }else{
+                work = false
+              }
+              var food = Math.floor(Math.random() * (foodMax - foodMin) + foodMin)
+              var strong
+              if (age<20){
+                strong = Math.floor((Math.random() * (99 - 80) + 80)/20*age)
+              }else if (age>=60){
+                strong = Math.floor((Math.random() * (99 - 80) + 80)/100*(100-age+60))
+              }else{
+                strong = Math.floor((Math.random() * (99 - 80) + 80))
+              }
+              var ppl = new People(i,good,age,work,food,strong)
+              arr.push(ppl)
+            }
+        },
       }
     })
   </script>
