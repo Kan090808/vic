@@ -1,0 +1,23 @@
+@font-face {
+  font-family: myFont;
+  src: url(SentyWEN2017.ttf);
+}
+
+body {
+  font-family: myFont;
+}
+
+html, body, .container-table {
+  height: 100%;
+}
+
+.container-table {
+  display: table;
+}
+.vertical-center-row {
+  display: table-cell;
+  vertical-align: middle;
+}
+.bottom-space {
+  padding-bottom: 30px;
+}
